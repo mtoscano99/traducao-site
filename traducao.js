@@ -15,15 +15,14 @@ const traducoes = {
 
 // Função para traduzir elementos no DOM
 function traduzirElementos() {
-   document.querySelectorAll("div, span, label, button, a, input, [aria-label]").forEach(el => {
-    let texto = el.innerText.trim() || el.getAttribute("aria-label");
-    if (traducoes[texto]) {
-        console.log(`✅ Traduzindo: ${texto} -> ${traducoes[texto]}`);
-        el.innerText = traducoes[texto];
-        el.setAttribute("aria-label", traducoes[texto]);
-    }
-});
-
+    document.querySelectorAll("div, span, label, button, a, input, [aria-label]").forEach(el => {
+        let texto = el.textContent.trim() || el.getAttribute("aria-label");
+        if (traducoes[texto]) {
+            console.log(`✅ Traduzindo: ${texto} -> ${traducoes[texto]}`);
+            el.textContent = traducoes[texto]; // Altera o texto do elemento
+            el.setAttribute("aria-label", traducoes[texto]); // Ajusta acessibilidade
+        }
+    });
 }
 
 // Executa a tradução quando a página carrega
@@ -39,16 +38,16 @@ window.onload = function () {
 
     observer.observe(document.body, { childList: true, subtree: true });
 
-let maxTentativas = 30; // Em vez de 15, tenta por mais tempo
-let intervalo = setInterval(() => {
-    tentativas++;
-    console.log(`🔄 Tentativa de tradução ${tentativas}`);
-    traduzirElementos();
-    if (tentativas >= maxTentativas) {
-        clearInterval(intervalo);
-        console.log("✅ Tradução finalizada!");
-    }
-}, 2000); // A cada 2 segundos, para cobrir carregamento dinâmico
-
+    // Reforça a tradução a cada 2 segundos por 30 vezes
+    let tentativas = 0;
+    let maxTentativas = 30;
+    let intervalo = setInterval(() => {
+        tentativas++;
+        console.log(`🔄 Tentativa de tradução ${tentativas}`);
+        traduzirElementos();
+        if (tentativas >= maxTentativas) {
+            clearInterval(intervalo);
+            console.log("✅ Tradução finalizada!");
+        }
+    }, 2000);
 };
-
