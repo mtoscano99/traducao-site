@@ -16,11 +16,13 @@ const traducoes = {
 // Função para traduzir elementos no DOM
 function traduzirElementos() {
     document.querySelectorAll("div, span, label, button, a, input, [aria-label]").forEach(el => {
-        let texto = el.textContent.trim() || el.getAttribute("aria-label");
-        if (traducoes[texto]) {
-            console.log(`✅ Traduzindo: ${texto} -> ${traducoes[texto]}`);
-            el.textContent = traducoes[texto]; // Altera o texto do elemento
-            el.setAttribute("aria-label", traducoes[texto]); // Ajusta acessibilidade
+        let textoOriginal = el.textContent.trim() || el.getAttribute("aria-label");
+        
+        // Se o texto for encontrado no dicionário, traduzimos
+        if (traducoes[textoOriginal]) {
+            console.log(`✅ Traduzindo: ${textoOriginal} -> ${traducoes[textoOriginal]}`);
+            el.textContent = traducoes[textoOriginal];
+            el.setAttribute("aria-label", traducoes[textoOriginal]); 
         }
     });
 }
