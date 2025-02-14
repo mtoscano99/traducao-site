@@ -15,41 +15,38 @@ const traducoes = {
 
 // Função para traduzir elementos no DOM
 function traduzirElementos() {
-    document.querySelectorAll("div, span, label, button, a, input, [aria-label]").forEach(el => {
-        let textoOriginal = el.textContent.trim() || el.getAttribute("aria-label");
-        
-        // Se o texto for encontrado no dicionário, traduzimos
-        if (traducoes[textoOriginal]) {
-            console.log(`✅ Traduzindo: ${textoOriginal} -> ${traducoes[textoOriginal]}`);
-            el.textContent = traducoes[textoOriginal];
-            el.setAttribute("aria-label", traducoes[textoOriginal]); 
+    document.querySelectorAll("div, span, label, button, a").forEach(el => {
+        let texto = el.innerText.trim();
+        if (traducoes[texto]) {
+            console.log(`✅ Traduzindo: ${texto} -> ${traducoes[texto]}`);
+            el.innerText = traducoes[texto];
         }
     });
 }
 
-// Executa a tradução quando a página carrega
-window.onload = function () {
-    console.log("✅ Página carregada, aplicando tradução...");
+// Atrasar a execução para garantir que os elementos existam no DOM
+setTimeout(() => {
+    console.log("⏳ Aplicando tradução com delay...");
     traduzirElementos();
+}, 3000);
 
-    // Monitorar mudanças no DOM para elementos carregados dinamicamente
-    let observer = new MutationObserver(() => {
-        console.log("🔄 Detecção de novo conteúdo, aplicando tradução...");
-        traduzirElementos();
-    });
+// Monitorar mudanças no DOM para elementos carregados dinamicamente
+let observer = new MutationObserver(() => {
+    console.log("🔄 Detecção de novo conteúdo, aplicando tradução...");
+    traduzirElementos();
+});
 
-    observer.observe(document.body, { childList: true, subtree: true });
+observer.observe(document.body, { childList: true, subtree: true });
 
-    // Reforça a tradução a cada 2 segundos por 30 vezes
-    let tentativas = 0;
-    let maxTentativas = 30;
-    let intervalo = setInterval(() => {
-        tentativas++;
-        console.log(`🔄 Tentativa de tradução ${tentativas}`);
-        traduzirElementos();
-        if (tentativas >= maxTentativas) {
-            clearInterval(intervalo);
-            console.log("✅ Tradução finalizada!");
-        }
-    }, 2000);
-};
+// Repetir a tradução algumas vezes para capturar mudanças dinâmicas
+let tentativas = 0;
+let maxTentativas = 20;
+let intervalo = setInterval(() => {
+    tentativas++;
+    console.log(`🔄 Tentativa de tradução ${tentativas}`);
+    traduzirElementos();
+    if (tentativas >= maxTentativas) {
+        clearInterval(intervalo);
+        console.log("✅ Tradução finalizada!");
+    }
+}, 3000);
