@@ -15,6 +15,7 @@ const traducoes = {
 
 // Função para traduzir elementos no DOM
 function traduzirElementos() {
+    console.log("🔄 Aplicando tradução nos elementos...");
     document.querySelectorAll("div, span, label, button, a").forEach(el => {
         let texto = el.innerText.trim();
         if (traducoes[texto]) {
@@ -26,9 +27,9 @@ function traduzirElementos() {
 
 // Atrasar a execução para garantir que os elementos existam no DOM
 setTimeout(() => {
-    console.log("⏳ Aplicando tradução com delay...");
+    console.log("⏳ Aplicando tradução após delay...");
     traduzirElementos();
-}, 3000);
+}, 5000);
 
 // Monitorar mudanças no DOM para elementos carregados dinamicamente
 let observer = new MutationObserver(() => {
@@ -38,7 +39,7 @@ let observer = new MutationObserver(() => {
 
 observer.observe(document.body, { childList: true, subtree: true });
 
-// Repetir a tradução algumas vezes para capturar mudanças dinâmicas
+// Forçar tradução a cada 3 segundos por 20 vezes
 let tentativas = 0;
 let maxTentativas = 20;
 let intervalo = setInterval(() => {
